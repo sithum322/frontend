@@ -31,6 +31,8 @@ jobs:
 
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
+          with:
+    dockerfile: ./frontend/Dockerfile
 
       - name: Run unit tests
         run: |
@@ -40,7 +42,7 @@ jobs:
       - name: Build & push Docker images
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./frontend
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
