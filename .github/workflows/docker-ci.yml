@@ -41,12 +41,12 @@ jobs:
       - name: Lint frontend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: frontend/Dockerfile
+          dockerfile: docker-app/frontend/Dockerfile
 
       - name: Lint backend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: backend/Dockerfile
+          dockerfile: docker-app/backend/Dockerfile
 
       # Step 7: Run frontend unit tests
       - name: Run frontend unit tests
@@ -58,8 +58,8 @@ jobs:
       - name: Build & push frontend image
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: ./docker-app/frontend
+          file: ./docker-app/frontend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
@@ -69,8 +69,8 @@ jobs:
       - name: Build & push backend image
         uses: docker/build-push-action@v5
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
+          context: ./docker-app/backend
+          file: ./docker-app/backend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
