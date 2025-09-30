@@ -12,15 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: List repo files (debug)
+      - name: List repository files
+        run: ls -R
+
+      # Step 3: Set up QEMU
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
+      # Step 4: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Step 5: Cache Docker layers
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
@@ -29,34 +37,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      # Step 6: Lint Dockerfiles
       - name: Lint frontend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ./Dockerfile
+          dockerfile: ./frontend/Dockerfile
 
       - name: Lint backend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ./backend/Dockerfile
 
-
-
-      - name: Run unit tests
+      # Step 7: Run frontend unit tests
+      - name: Run frontend unit tests
         run: |
+          cd frontend
           npm install
           npm test
 
+      # Step 8: Build & push frontend Docker image
       - name: Build & push frontend image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:1.0
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 
+      # Step 9: Build & push backend Docker image
       - name: Build & push backend image
         uses: docker/build-push-action@v5
         with:
@@ -68,14 +79,14 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:1.0
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
-
+      # Step 10: Generate SBOM
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.15.10
         with:
           format: json
           output-file: sbom.json
 
-
+      # Step 11: Upload SBOM artifact
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
