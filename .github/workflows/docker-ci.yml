@@ -31,8 +31,8 @@ jobs:
 
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
-          with:
-    dockerfile: ./frontend/Dockerfile
+        with:
+          dockerfile: ./frontend/Dockerfile
 
       - name: Run unit tests
         run: |
