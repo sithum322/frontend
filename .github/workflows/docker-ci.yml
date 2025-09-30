@@ -29,15 +29,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Lint frontend Dockerfile
+      - name: Lint Dockerfile 1
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ./frontend/Dockerfile
+          dockerfile: ./Dockerfile
 
-      - name: Lint backend Dockerfile
+      - name: Lint Dockerfile 2
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ./backend/Dockerfile
+          dockerfile: ./Dockerfile
+
+      - name: Lint Dockerfile 3
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./Dockerfile
+
 
       - name: Run unit tests
         run: |
