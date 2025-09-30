@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3
+        uses: hadolint/hadolint-action@v2.1.0
 
       - name: Run unit tests
         run: |
@@ -50,7 +50,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
       - name: Generate SBOM
-        uses: anchore/syft-action@v1
+        uses: anchore/syft-action@v0.11.2
         with:
           output: sbom.json
 
