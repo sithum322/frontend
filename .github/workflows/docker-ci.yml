@@ -41,12 +41,12 @@ jobs:
       - name: Lint frontend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: Dockerfile
+          dockerfile: frontend/Dockerfile
 
       - name: Lint backend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ./backend/Dockerfile
+          dockerfile: backend/Dockerfile
 
       # Step 7: Run frontend unit tests
       - name: Run frontend unit tests
@@ -55,7 +55,6 @@ jobs:
           npm install
           npm test
 
-      # Step 8: Build & push frontend Docker image
       - name: Build & push frontend image
         uses: docker/build-push-action@v5
         with:
@@ -67,7 +66,6 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:1.0
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 
-      # Step 9: Build & push backend Docker image
       - name: Build & push backend image
         uses: docker/build-push-action@v5
         with:
