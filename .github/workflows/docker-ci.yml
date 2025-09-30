@@ -29,11 +29,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Lint Dockerfile
+      - name: Lint frontend Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ./Dockerfile
 
+      - name: Lint backend Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./backend/Dockerfile
 
 
 
@@ -42,17 +46,28 @@ jobs:
           npm install
           npm test
 
-      - name: Build & push Docker images
+      - name: Build & push frontend image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:1.0
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+
+      - name: Build & push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:1.0
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.15.10
